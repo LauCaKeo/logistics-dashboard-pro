@@ -49,10 +49,10 @@ CRON_SECRET=random-secret-string
 
 ```bash
 # Test dashboard
-curl https://your-app.vercel.app
+curl https://logistics-dashboard-final-xi.vercel.app
 
 # Test API
-curl -X POST https://your-app.vercel.app/api/trips \
+curl -X POST https://logistics-dashboard-final-xi.vercel.app/api/trips \
   -H "Content-Type: application/json" \
   -d '{"driver":"Test","vehicle":"Test","route":"Test"}'
 ```
@@ -62,12 +62,12 @@ curl -X POST https://your-app.vercel.app/api/trips \
 ```bash
 curl -X POST https://api.telegram.org/bot<TOKEN>/setWebhook \
   -H "Content-Type: application/json" \
-  -d '{"url": "https://your-app.vercel.app/api/telegram/webhook"}'
+  -d '{"url": "https://logistics-dashboard-final-xi.vercel.app/api/telegram/webhook"}'
 ```
 
 ## ✅ Hoàn thành
 
-Dashboard sẽ available tại: `https://your-app.vercel.app`
+Dashboard sẽ available tại: `https://logistics-dashboard-final-xi.vercel.app`
 
 ---
 

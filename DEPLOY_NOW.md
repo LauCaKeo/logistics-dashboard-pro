@@ -99,7 +99,7 @@ In Vercel Dashboard → Project → Settings → Environment Variables:
 # Required Variables
 TELEGRAM_BOT_TOKEN=your_bot_token_from_botfather
 TELEGRAM_CHAT_ID=1361977198
-NEXT_PUBLIC_APP_URL=https://your-app.vercel.app
+NEXT_PUBLIC_APP_URL=https://logistics-dashboard-final-xi.vercel.app
 CRON_SECRET=your_random_secret_key
 
 # Google APIs (if using)
@@ -128,10 +128,10 @@ SMTP_PASS=your-app-password
 
 ```bash
 # Replace YOUR_APP_URL with your Vercel URL
-curl https://YOUR_APP_URL.vercel.app
+curl https://logistics-dashboard-final-xi.vercel.app
 
 # Test API endpoints
-curl https://YOUR_APP_URL.vercel.app/api/telegram/bot-info
+curl https://logistics-dashboard-final-xi.vercel.app/api/telegram/bot-info
 ```
 
 ### 2. Set Telegram Webhook
@@ -140,14 +140,14 @@ curl https://YOUR_APP_URL.vercel.app/api/telegram/bot-info
 # Get your bot token from @BotFather first
 curl -X POST "https://api.telegram.org/bot<YOUR_BOT_TOKEN>/setWebhook" \
   -H "Content-Type: application/json" \
-  -d '{"url": "https://YOUR_APP_URL.vercel.app/api/telegram/webhook"}'
+  -d '{"url": "https://logistics-dashboard-final-xi.vercel.app/api/telegram/webhook"}'
 ```
 
 ### 3. Test Telegram Integration
 
 ```bash
 # Send test notification
-curl -X POST https://YOUR_APP_URL.vercel.app/api/telegram/send-notification \
+curl -X POST https://logistics-dashboard-final-xi.vercel.app/api/telegram/send-notification \
   -H "Content-Type: application/json" \
   -d '{"message":"🚀 Deployment successful! Dashboard is live!","type":"success"}'
 ```
@@ -155,7 +155,7 @@ curl -X POST https://YOUR_APP_URL.vercel.app/api/telegram/send-notification \
 ### 4. Test Trip Creation
 
 ```bash
-curl -X POST https://YOUR_APP_URL.vercel.app/api/trips \
+curl -X POST https://logistics-dashboard-final-xi.vercel.app/api/trips \
   -H "Content-Type: application/json" \
   -d '{
     "driver": "Test Driver",
@@ -171,8 +171,8 @@ curl -X POST https://YOUR_APP_URL.vercel.app/api/trips \
 
 ### ✅ Successful Deployment
 
-- Dashboard accessible at: `https://your-app.vercel.app`
-- Tracking form at: `https://your-app.vercel.app/tracking`
+- Dashboard accessible at: `https://logistics-dashboard-final-xi.vercel.app`
+- Tracking form at: `https://logistics-dashboard-final-xi.vercel.app/tracking`
 - API endpoints responding correctly
 - Telegram bot receiving messages
 
@@ -223,7 +223,7 @@ curl -X POST https://YOUR_APP_URL.vercel.app/api/trips \
 
 After deployment:
 
-1. **Dashboard URL:** `https://your-app.vercel.app`
+1. **Dashboard URL:** `https://logistics-dashboard-final-xi.vercel.app`
 2. **Telegram Bot:** @reactintegrationkhovanbot
 3. **Admin Features:** Trip tracking, automated reports
 4. **Monitoring:** Vercel analytics and logs

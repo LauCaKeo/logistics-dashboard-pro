@@ -18,7 +18,7 @@
 Chạy lệnh sau (thay YOUR_USERNAME bằng username GitHub của bạn):
 
 ```bash
-cd /Users/phuccao/Desktop/Dashboard_VanChuyen/logistics-dashboard-pro
+cd /Users/phuccao/Projects/logistics-dashboard-pro  # Vào thư mục dự án
 
 # Thêm remote origin
 git remote add origin https://github.com/YOUR_USERNAME/logistics-dashboard-pro.git

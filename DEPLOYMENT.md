@@ -139,27 +139,27 @@ CRON_SECRET=your-random-secret-string
 
 ```bash
 # Test trip creation
-curl -X POST https://your-app.vercel.app/api/trips \
+curl -X POST https://logistics-dashboard-final-xi.vercel.app/api/trips \
   -H "Content-Type: application/json" \
   -d '{"driver":"Test Driver","vehicle":"Test Vehicle","route":"Test Route"}'
 
 # Test notification
-curl -X POST https://your-app.vercel.app/api/telegram/send-notification \
+curl -X POST https://logistics-dashboard-final-xi.vercel.app/api/telegram/send-notification \
   -H "Content-Type: application/json" \
   -d '{"message":"Test notification","type":"info"}'
 
 # Test email
-curl -X POST https://your-app.vercel.app/api/email/send-report \
+curl -X POST https://logistics-dashboard-final-xi.vercel.app/api/email/send-report \
   -H "Content-Type: application/json" \
   -d '{"type":"test","to":"your-email@domain.com"}'
 
 # Test cron (with secret)
-curl -X GET "https://your-app.vercel.app/api/cron/daily-report?secret=your-cron-secret"
+curl -X GET "https://logistics-dashboard-final-xi.vercel.app/api/cron/daily-report?secret=your-cron-secret"
 ```
 
 ### Test Dashboard
 
-- [ ] Truy cập dashboard: `https://your-app.vercel.app/`
+- [ ] Truy cập dashboard: `https://logistics-dashboard-final-xi.vercel.app/`
 - [ ] Test tạo chuyến xe mới
 - [ ] Test gửi notification
 - [ ] Test báo cáo
