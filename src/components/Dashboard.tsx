@@ -1,4 +1,4 @@
-'use client';
+'use client'
 
 import {
   AlertCircle,
@@ -13,28 +13,28 @@ import {
   TrendingUp,
   Truck,
   Users,
-} from 'lucide-react';
-import { useEffect, useState } from 'react';
+} from 'lucide-react'
+import { useEffect, useState } from 'react'
 
 interface DashboardStats {
-  totalTrips: number;
-  totalProducts: number;
-  totalCost: number;
-  totalDistance: number;
-  activeTrips: number;
-  completedToday: number;
+  totalTrips: number
+  totalProducts: number
+  totalCost: number
+  totalDistance: number
+  activeTrips: number
+  completedToday: number
 }
 
 interface Trip {
-  id: string;
-  vehicleId: string;
-  driverName: string;
-  route: string;
-  status: 'started' | 'in_transit' | 'completed' | 'cancelled';
-  startTime: string;
-  endTime?: string;
-  cost: number;
-  distance: number;
+  id: string
+  vehicleId: string
+  driverName: string
+  route: string
+  status: 'started' | 'in_transit' | 'completed' | 'cancelled'
+  startTime: string
+  endTime?: string
+  cost: number
+  distance: number
 }
 
 export default function Dashboard() {
@@ -45,46 +45,46 @@ export default function Dashboard() {
     totalDistance: 1540,
     activeTrips: 3,
     completedToday: 5,
-  });
+  })
 
-  const [recentTrips, setRecentTrips] = useState<Trip[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [notifications, setNotifications] = useState<string[]>([]);
+  const [recentTrips, setRecentTrips] = useState<Trip[]>([])
+  const [loading, setLoading] = useState(true)
+  const [notifications, setNotifications] = useState<string[]>([])
 
   useEffect(() => {
-    fetchDashboardData();
-  }, []);
+    fetchDashboardData()
+  }, [])
 
   const fetchDashboardData = async () => {
     try {
-      setLoading(true);
+      setLoading(true)
 
       // Fetch today's trips
-      const today = new Date();
-      const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-      const endOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+      const today = new Date()
+      const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate())
+      const endOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1)
 
       const response = await fetch(
         `/api/trips?startDate=${startOfDay.toISOString()}&endDate=${endOfDay.toISOString()}`,
-      );
-      const data = await response.json();
+      )
+      const data = await response.json()
 
       if (data.success) {
-        setRecentTrips(data.data.trips.slice(0, 10));
+        setRecentTrips(data.data.trips.slice(0, 10))
         setStats((prevStats) => ({
           ...prevStats,
           totalTrips: data.data.summary.total,
           completedToday: data.data.summary.completed,
           activeTrips: data.data.summary.inTransit + data.data.summary.started,
-        }));
+        }))
       }
     } catch (error) {
-      console.error('Error fetching dashboard data:', error);
-      setNotifications((prev) => [...prev, 'Lỗi khi tải dữ liệu dashboard']);
+      console.error('Error fetching dashboard data:', error)
+      setNotifications((prev) => [...prev, 'Lỗi khi tải dữ liệu dashboard'])
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const sendTestNotification = async () => {
     try {
@@ -95,34 +95,34 @@ export default function Dashboard() {
           message: 'Test notification từ Logistics Dashboard Pro! 🚛',
           priority: 'normal',
         }),
-      });
+      })
 
-      const result = await response.json();
+      const result = await response.json()
       if (result.success) {
-        setNotifications((prev) => [...prev, 'Đã gửi thông báo test thành công!']);
+        setNotifications((prev) => [...prev, 'Đã gửi thông báo test thành công!'])
       } else {
-        setNotifications((prev) => [...prev, 'Lỗi gửi thông báo: ' + result.error]);
+        setNotifications((prev) => [...prev, 'Lỗi gửi thông báo: ' + result.error])
       }
     } catch (error) {
-      console.error('Error sending test notification:', error);
-      setNotifications((prev) => [...prev, 'Lỗi kết nối Telegram']);
+      console.error('Error sending test notification:', error)
+      setNotifications((prev) => [...prev, 'Lỗi kết nối Telegram'])
     }
-  };
+  }
 
   const generateReport = async (type: 'daily' | 'weekly') => {
     try {
-      const today = new Date();
-      let startDate, endDate;
+      const today = new Date()
+      let startDate, endDate
 
       if (type === 'daily') {
-        startDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-        endDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+        startDate = new Date(today.getFullYear(), today.getMonth(), today.getDate())
+        endDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1)
       } else {
-        const dayOfWeek = today.getDay();
-        startDate = new Date(today);
-        startDate.setDate(today.getDate() - dayOfWeek + 1);
-        endDate = new Date(startDate);
-        endDate.setDate(startDate.getDate() + 7);
+        const dayOfWeek = today.getDay()
+        startDate = new Date(today)
+        startDate.setDate(today.getDate() - dayOfWeek + 1)
+        endDate = new Date(startDate)
+        endDate.setDate(startDate.getDate() + 7)
       }
 
       // Mock report data - trong thực tế sẽ lấy từ API
@@ -143,7 +143,7 @@ export default function Dashboard() {
           costEfficiency: 88,
           fuelEfficiency: 92,
         },
-      };
+      }
 
       const response = await fetch('/api/email/send-report', {
         method: 'POST',
@@ -152,35 +152,35 @@ export default function Dashboard() {
           type,
           data: reportData,
         }),
-      });
+      })
 
-      const result = await response.json();
+      const result = await response.json()
       if (result.success) {
         setNotifications((prev) => [
           ...prev,
           `Đã gửi báo cáo ${type === 'daily' ? 'hàng ngày' : 'tuần'} thành công!`,
-        ]);
+        ])
       } else {
-        setNotifications((prev) => [...prev, 'Lỗi gửi báo cáo: ' + result.error]);
+        setNotifications((prev) => [...prev, 'Lỗi gửi báo cáo: ' + result.error])
       }
     } catch (error) {
-      console.error('Error generating report:', error);
-      setNotifications((prev) => [...prev, 'Lỗi tạo báo cáo']);
+      console.error('Error generating report:', error)
+      setNotifications((prev) => [...prev, 'Lỗi tạo báo cáo'])
     }
-  };
+  }
 
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'completed':
-        return <CheckCircle className="w-4 h-4 text-green-500" />;
+        return <CheckCircle className="w-4 h-4 text-green-500" />
       case 'in_transit':
-        return <Clock className="w-4 h-4 text-yellow-500" />;
+        return <Clock className="w-4 h-4 text-yellow-500" />
       case 'started':
-        return <Truck className="w-4 h-4 text-blue-500" />;
+        return <Truck className="w-4 h-4 text-blue-500" />
       default:
-        return <AlertCircle className="w-4 h-4 text-red-500" />;
+        return <AlertCircle className="w-4 h-4 text-red-500" />
     }
-  };
+  }
 
   const getStatusText = (status: string) => {
     const statusMap = {
@@ -188,9 +188,9 @@ export default function Dashboard() {
       in_transit: 'Đang vận chuyển',
       completed: 'Hoàn thành',
       cancelled: 'Hủy bỏ',
-    };
-    return statusMap[status as keyof typeof statusMap] || status;
-  };
+    }
+    return statusMap[status as keyof typeof statusMap] || status
+  }
 
   if (loading) {
     return (
@@ -200,7 +200,7 @@ export default function Dashboard() {
           <p className="text-gray-600">Đang tải dashboard...</p>
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -426,5 +426,5 @@ export default function Dashboard() {
         </div>
       </div>
     </div>
-  );
+  )
 }

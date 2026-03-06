@@ -1,24 +1,24 @@
-import { ReportData, VehicleTrip } from '@/types';
-import sgMail from '@sendgrid/mail';
-import nodemailer from 'nodemailer';
+import { ReportData, VehicleTrip } from '@/types'
+import sgMail from '@sendgrid/mail'
+import nodemailer from 'nodemailer'
 
 export class EmailService {
-  private transporter: nodemailer.Transporter | null = null;
-  private usesSendGrid: boolean;
-  private from: string;
-  private recipients: string[];
+  private transporter: nodemailer.Transporter | null = null
+  private usesSendGrid: boolean
+  private from: string
+  private recipients: string[]
 
   constructor() {
-    this.from = process.env.EMAIL_FROM || 'logistics@company.com';
-    this.recipients = (process.env.EMAIL_TO || '').split(',').filter(Boolean);
-    this.usesSendGrid = process.env.EMAIL_SERVICE === 'sendgrid';
+    this.from = process.env.EMAIL_FROM || 'logistics@company.com'
+    this.recipients = (process.env.EMAIL_TO || '').split(',').filter(Boolean)
+    this.usesSendGrid = process.env.EMAIL_SERVICE === 'sendgrid'
 
     if (this.usesSendGrid) {
       if (process.env.SENDGRID_API_KEY) {
-        sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+        sgMail.setApiKey(process.env.SENDGRID_API_KEY)
       }
     } else {
-      this.setupSMTP();
+      this.setupSMTP()
     }
   }
 
@@ -31,63 +31,63 @@ export class EmailService {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS,
       },
-    });
+    })
   }
 
   // Gửi báo cáo hàng ngày
   async sendDailyReport(reportData: ReportData): Promise<boolean> {
-    const subject = `📊 Báo cáo hàng ngày - ${reportData.startDate.toLocaleDateString('vi-VN')}`;
-    const html = this.generateDailyReportHTML(reportData);
+    const subject = `📊 Báo cáo hàng ngày - ${reportData.startDate.toLocaleDateString('vi-VN')}`
+    const html = this.generateDailyReportHTML(reportData)
 
-    return this.sendEmail(subject, html);
+    return this.sendEmail(subject, html)
   }
 
   // Gửi báo cáo tuần
   async sendWeeklyReport(reportData: ReportData): Promise<boolean> {
-    const subject = `📈 Báo cáo tuần - ${reportData.startDate.toLocaleDateString('vi-VN')} đến ${reportData.endDate.toLocaleDateString('vi-VN')}`;
-    const html = this.generateWeeklyReportHTML(reportData);
+    const subject = `📈 Báo cáo tuần - ${reportData.startDate.toLocaleDateString('vi-VN')} đến ${reportData.endDate.toLocaleDateString('vi-VN')}`
+    const html = this.generateWeeklyReportHTML(reportData)
 
-    return this.sendEmail(subject, html);
+    return this.sendEmail(subject, html)
   }
 
   // Gửi báo cáo quý
   async sendQuarterlyReport(reportData: ReportData): Promise<boolean> {
-    const quarter = Math.floor(reportData.startDate.getMonth() / 3) + 1;
-    const year = reportData.startDate.getFullYear();
-    const subject = `📊 Báo cáo Quý ${quarter}/${year}`;
-    const html = this.generateQuarterlyReportHTML(reportData);
+    const quarter = Math.floor(reportData.startDate.getMonth() / 3) + 1
+    const year = reportData.startDate.getFullYear()
+    const subject = `📊 Báo cáo Quý ${quarter}/${year}`
+    const html = this.generateQuarterlyReportHTML(reportData)
 
-    return this.sendEmail(subject, html);
+    return this.sendEmail(subject, html)
   }
 
   // Gửi báo cáo năm
   async sendYearlyReport(reportData: ReportData): Promise<boolean> {
-    const year = reportData.startDate.getFullYear();
-    const subject = `🎊 Báo cáo năm ${year}`;
-    const html = this.generateYearlyReportHTML(reportData);
+    const year = reportData.startDate.getFullYear()
+    const subject = `🎊 Báo cáo năm ${year}`
+    const html = this.generateYearlyReportHTML(reportData)
 
-    return this.sendEmail(subject, html);
+    return this.sendEmail(subject, html)
   }
 
   // Gửi thông báo hoàn thành chuyến
   async sendTripCompletionNotification(trip: VehicleTrip): Promise<boolean> {
-    const subject = `✅ Hoàn thành chuyến xe ${trip.id}`;
-    const html = this.generateTripCompletionHTML(trip);
+    const subject = `✅ Hoàn thành chuyến xe ${trip.id}`
+    const html = this.generateTripCompletionHTML(trip)
 
-    return this.sendEmail(subject, html);
+    return this.sendEmail(subject, html)
   }
 
   // Gửi email tùy chỉnh
   async sendCustomEmail(subject: string, message: string, isHTML = false): Promise<boolean> {
-    return this.sendEmail(subject, isHTML ? message : this.wrapInTemplate(message));
+    return this.sendEmail(subject, isHTML ? message : this.wrapInTemplate(message))
   }
 
   // Hàm gửi email chính
   private async sendEmail(subject: string, html: string): Promise<boolean> {
     try {
       if (this.recipients.length === 0) {
-        console.warn('No email recipients configured');
-        return false;
+        console.warn('No email recipients configured')
+        return false
       }
 
       if (this.usesSendGrid) {
@@ -96,13 +96,13 @@ export class EmailService {
           from: this.from,
           subject,
           html,
-        };
+        }
 
-        await sgMail.sendMultiple(msg);
+        await sgMail.sendMultiple(msg)
       } else {
         if (!this.transporter) {
-          console.error('SMTP transporter not configured');
-          return false;
+          console.error('SMTP transporter not configured')
+          return false
         }
 
         await this.transporter.sendMail({
@@ -110,21 +110,21 @@ export class EmailService {
           to: this.recipients.join(','),
           subject,
           html,
-        });
+        })
       }
 
-      console.log(`Email sent successfully: ${subject}`);
-      return true;
+      console.log(`Email sent successfully: ${subject}`)
+      return true
     } catch (error) {
-      console.error('Error sending email:', error);
-      return false;
+      console.error('Error sending email:', error)
+      return false
     }
   }
 
   // Generate HTML templates
   private generateDailyReportHTML(reportData: ReportData): string {
-    const { summary, trips } = reportData;
-    const date = reportData.startDate.toLocaleDateString('vi-VN');
+    const { summary, trips } = reportData
+    const date = reportData.startDate.toLocaleDateString('vi-VN')
 
     return `
     <!DOCTYPE html>
@@ -208,13 +208,13 @@ export class EmailService {
             </div>
         </div>
     </body>
-    </html>`;
+    </html>`
   }
 
   private generateWeeklyReportHTML(reportData: ReportData): string {
-    const { performance } = reportData;
-    const startDate = reportData.startDate.toLocaleDateString('vi-VN');
-    const endDate = reportData.endDate.toLocaleDateString('vi-VN');
+    const { performance } = reportData
+    const startDate = reportData.startDate.toLocaleDateString('vi-VN')
+    const endDate = reportData.endDate.toLocaleDateString('vi-VN')
 
     return `
     <!DOCTYPE html>
@@ -259,12 +259,12 @@ export class EmailService {
             </div>
         </div>
     </body>
-    </html>`;
+    </html>`
   }
 
   private generateQuarterlyReportHTML(reportData: ReportData): string {
-    const quarter = Math.floor(reportData.startDate.getMonth() / 3) + 1;
-    const year = reportData.startDate.getFullYear();
+    const quarter = Math.floor(reportData.startDate.getMonth() / 3) + 1
+    const year = reportData.startDate.getFullYear()
 
     return `
     <!DOCTYPE html>
@@ -293,11 +293,11 @@ export class EmailService {
             </div>
         </div>
     </body>
-    </html>`;
+    </html>`
   }
 
   private generateYearlyReportHTML(reportData: ReportData): string {
-    const year = reportData.startDate.getFullYear();
+    const year = reportData.startDate.getFullYear()
 
     return `
     <!DOCTYPE html>
@@ -328,7 +328,7 @@ export class EmailService {
             </div>
         </div>
     </body>
-    </html>`;
+    </html>`
   }
 
   private generateTripCompletionHTML(trip: VehicleTrip): string {
@@ -364,7 +364,7 @@ export class EmailService {
             </div>
         </div>
     </body>
-    </html>`;
+    </html>`
   }
 
   private wrapInTemplate(message: string): string {
@@ -383,7 +383,7 @@ export class EmailService {
             <p>${message.replace(/\n/g, '<br>')}</p>
         </div>
     </body>
-    </html>`;
+    </html>`
   }
 
   private getStatusText(status: string): string {
@@ -392,8 +392,8 @@ export class EmailService {
       in_transit: 'Đang vận chuyển',
       completed: 'Hoàn thành',
       cancelled: 'Hủy bỏ',
-    };
-    return statusMap[status as keyof typeof statusMap] || status;
+    }
+    return statusMap[status as keyof typeof statusMap] || status
   }
 
   // Test email configuration
@@ -407,19 +407,19 @@ export class EmailService {
             from: this.from,
             subject: 'Test Connection - Logistics Dashboard',
             text: 'Email service is working correctly!',
-          });
+          })
         }
       } else {
         if (this.transporter) {
-          await this.transporter.verify();
+          await this.transporter.verify()
         }
       }
-      return true;
+      return true
     } catch (error) {
-      console.error('Email connection test failed:', error);
-      return false;
+      console.error('Email connection test failed:', error)
+      return false
     }
   }
 }
 
-export const emailService = new EmailService();
+export const emailService = new EmailService()
